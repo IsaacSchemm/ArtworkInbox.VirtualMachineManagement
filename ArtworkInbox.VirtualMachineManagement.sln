@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArtworkInbox.VirtualMachineManagement", "ArtworkInbox.VirtualMachineManagement.csproj", "{0F461E13-F4FB-41E6-AA07-B938E6144279}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F461E13-F4FB-41E6-AA07-B938E6144279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F461E13-F4FB-41E6-AA07-B938E6144279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F461E13-F4FB-41E6-AA07-B938E6144279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F461E13-F4FB-41E6-AA07-B938E6144279}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {06B986DB-CD51-4FAD-BB4F-AA40D2A3C369}
+	EndGlobalSection
+EndGlobal
