@@ -29,6 +29,11 @@ namespace ArtworkInbox.VirtualMachineManagement
             return instanceView.Value.Statuses.Select(x => x.Code).ToList();
         }
 
+        public static async Task<bool> HasPowerStateAsync(string state) {
+            var powerStates = await GetPowerStatesAsync();
+            return powerStates.Contains(state);
+        }
+
         [FunctionName("power-states")]
         public static async Task<IActionResult> PowerStates([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req) {
             return new OkObjectResult(await GetPowerStatesAsync());
@@ -37,19 +42,18 @@ namespace ArtworkInbox.VirtualMachineManagement
         [FunctionName("start")]
         public static async Task Start([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req)
         {
-            if (!(await GetPowerStatesAsync()).Contains("PowerState/running"))
+            if (!await HasPowerStateAsync("PowerState/running"))
                 await VirtualMachineResource.PowerOnAsync(Azure.WaitUntil.Completed);
 
-            await VirtualMachineResource.AddTagAsync("ArtworkInboxShutdownAt", $"{DateTimeOffset.UtcNow.AddHours(2):o}");
+            await VirtualMachineResource.AddTagAsync("ShutdownOkAt", $"{DateTimeOffset.UtcNow.AddHours(4):o}");
         }
 
         [FunctionName("stop")]
-        public static async Task StopAsync([TimerTrigger("0 35 * * * *")] TimerInfo myTimer) {
+        public static async Task StopAsync([TimerTrigger("0 */30 * * * *")] TimerInfo myTimer) {
             var tags = await VirtualMachineResource.GetTagResource().GetAsync();
-            if (tags.Value.Data.TagValues.TryGetValue("ArtworkInboxShutdownAt", out string str) && DateTimeOffset.TryParse(str, out DateTimeOffset dt) && dt < DateTimeOffset.UtcNow) {
+            bool keepRunning = tags.Value.Data.TagValues.TryGetValue("ShutdownOkAt", out string str) && DateTimeOffset.TryParse(str, out DateTimeOffset dt) && dt >= DateTimeOffset.UtcNow;
+            if (!keepRunning && !await HasPowerStateAsync("PowerState/deallocated"))
                 await VirtualMachineResource.DeallocateAsync(Azure.WaitUntil.Completed);
-                await VirtualMachineResource.RemoveTagAsync("ArtworkInboxShutdownAt");
-            }
         }
     }
 }
