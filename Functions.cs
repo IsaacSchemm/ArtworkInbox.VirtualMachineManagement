@@ -40,11 +40,11 @@ namespace ArtworkInbox.VirtualMachineManagement
             if (!(await GetPowerStatesAsync()).Contains("PowerState/running"))
                 await VirtualMachineResource.PowerOnAsync(Azure.WaitUntil.Completed);
 
-            await VirtualMachineResource.AddTagAsync("ArtworkInboxShutdownAt", $"{DateTimeOffset.UtcNow.AddHours(1):o}");
+            await VirtualMachineResource.AddTagAsync("ArtworkInboxShutdownAt", $"{DateTimeOffset.UtcNow.AddHours(2):o}");
         }
 
         [FunctionName("stop")]
-        public static async Task StopAsync([TimerTrigger("0 25 * * * *")] TimerInfo myTimer) {
+        public static async Task StopAsync([TimerTrigger("0 35 * * * *")] TimerInfo myTimer) {
             var tags = await VirtualMachineResource.GetTagResource().GetAsync();
             if (tags.Value.Data.TagValues.TryGetValue("ArtworkInboxShutdownAt", out string str) && DateTimeOffset.TryParse(str, out DateTimeOffset dt) && dt < DateTimeOffset.UtcNow) {
                 await VirtualMachineResource.DeallocateAsync(Azure.WaitUntil.Completed);
