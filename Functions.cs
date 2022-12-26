@@ -45,7 +45,7 @@ namespace ArtworkInbox.VirtualMachineManagement
             if (!await HasPowerStateAsync("PowerState/running"))
                 await VirtualMachineResource.PowerOnAsync(Azure.WaitUntil.Completed);
 
-            await VirtualMachineResource.AddTagAsync("ShutdownOkAt", $"{DateTimeOffset.UtcNow.AddHours(4):o}");
+            await VirtualMachineResource.AddTagAsync("ShutdownOkAt", $"{DateTimeOffset.UtcNow.AddHours(2):o}");
         }
 
         [FunctionName("stop")]
